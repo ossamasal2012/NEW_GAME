@@ -1,0 +1,62 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scenes/boot/boot.gd" id="1_boot"]
+
+[sub_resource type="Gradient" id="Gradient_yo7vy"]
+offsets = PackedFloat32Array(0, 0.55, 1)
+colors = PackedColorArray(0.18, 0.137, 0.376, 1, 0.051, 0.039, 0.157, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_lhnci"]
+gradient = SubResource("Gradient_yo7vy")
+width = 4
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.42)
+fill_to = Vector2(0.5, 1.05)
+
+[node name="Boot" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+layout_direction = 3
+script = ExtResource("1_boot")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_lhnci")
+expand_mode = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="TitleBox" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/TitleBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+theme_override_colors/font_color = Color(1, 0.867, 0.635, 1)
+theme_override_colors/font_shadow_color = Color(1, 0.6, 0.2, 0.35)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 0
+theme_override_constants/shadow_outline_size = 18
+text = "فانوس"
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="CenterContainer/TitleBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.788, 0.745, 0.898, 0.85)
+text = "عالمٌ يكبر معك"
+horizontal_alignment = 1
