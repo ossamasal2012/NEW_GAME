@@ -1,0 +1,113 @@
+# .github/workflows/build-android.yml
+#
+# يبني نسخة Android APK (Debug) تلقائيًا من المستودع مباشرة، بلا أي تدخل
+# يدوي: كل push إلى main يُنتج ملف APK جاهزًا للتثبيت كمُخرَج (Artifact).
+#
+# لماذا هذا الأسلوب تحديدًا بدل استخدام صورة Docker جاهزة أو إضافة جهة
+# ثالثة (مثل godot-ci أو godot-export)؟
+# لأن كل خطوة هنا صريحة ومقروءة بالكامل، ولا تعتمد على أن يُبقي طرف ثالث
+# صورته محدّثة لأحدث إصدار من Godot (الذي صدر قبل أيام فقط وقت كتابة هذا
+# الملف). هذا يعني تحكمًا كاملًا وقابلية صيانة أعلى — وهذا بالضبط ما طلبه
+# معيار "الكود منظم وقابل للصيانة" في متطلبات المشروع.
+#
+# هذه المرحلة تبني نسخة Debug فقط (تثبيت وتجربة مباشرة على الجهاز). حزمة
+# Release الموقّعة لمتجر Google Play ستُضاف في مرحلة لاحقة عبر GitHub
+# Secrets لبيانات التوقيع، دون تعديل هذا الملف من الصفر.
+
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+env:
+  GODOT_VERSION: "4.7.1"
+  GODOT_STATUS: "stable"
+
+jobs:
+  build-android:
+    name: Export Android Debug APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Cache Godot editor and export templates
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-editor
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}-${{ env.GODOT_STATUS }}-v1
+
+      - name: Download Godot editor and export templates
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          set -e
+          echo "Downloading Godot ${GODOT_VERSION}-${GODOT_STATUS}..."
+
+          mkdir -p ~/godot-editor
+          cd ~/godot-editor
+          curl -fL -o godot.zip \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-${GODOT_STATUS}/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64.zip"
+          unzip -q godot.zip
+          mv "Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64" godot
+          chmod +x godot
+          rm godot.zip
+
+          TEMPLATE_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.${GODOT_STATUS}"
+          mkdir -p "$TEMPLATE_DIR"
+          cd /tmp
+          curl -fL -o templates.tpz \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-${GODOT_STATUS}/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_export_templates.tpz"
+          unzip -q templates.tpz "templates/*"
+          mv templates/* "$TEMPLATE_DIR"/
+          rm -rf templates templates.tpz
+
+      - name: Show Godot version
+        run: ~/godot-editor/godot --version
+
+      - name: Pre-heat asset import cache
+        # يجبر Godot على استيراد كل الموارد مرة واحدة قبل التصدير. بدون هذه
+        # الخطوة يفشل التصدير الصامت على مستودع نظيف (مشكلة معروفة وموثّقة
+        # في Godot عند التصدير من بيئة CI لم يُفتح فيها المشروع من قبل).
+        # الفشل المحتمل لهذا الأمر تحديدًا غير حرج ولا يعني تعطّل الاستيراد،
+        # لذلك لا نوقف البناء بسببه — الخطوة التالية ستكشف أي مشكلة حقيقية.
+        run: ~/godot-editor/godot --headless --editor --quit --path . || true
+
+      - name: Install Android build template and export debug APK
+        run: |
+          set -e
+          mkdir -p build/android
+          ~/godot-editor/godot --headless --verbose \
+            --install-android-build-template \
+            --export-debug "Android" build/android/fanous-debug.apk \
+            --path .
+
+      - name: Verify APK was produced
+        run: |
+          set -e
+          if [ ! -f build/android/fanous-debug.apk ]; then
+            echo "::error::لم يُنتَج ملف APK — راجع سجل الخطوة السابقة."
+            exit 1
+          fi
+          ls -la build/android/
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fanous-debug-apk
+          path: build/android/fanous-debug.apk
+          retention-days: 30
