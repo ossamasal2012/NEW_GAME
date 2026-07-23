@@ -1,0 +1,349 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/textures/soft_particle.png" id="1_0ebjn"]
+[ext_resource type="Script" path="res://scripts/ui/touch_button_feedback.gd" id="2_ob46e"]
+[ext_resource type="Script" path="res://scenes/main_menu/main_menu.gd" id="3_menu"]
+
+[sub_resource type="Gradient" id="Gradient_uqeha"]
+offsets = PackedFloat32Array(0, 0.6, 1)
+colors = PackedColorArray(0.161, 0.122, 0.322, 1, 0.035, 0.027, 0.11, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_wem23"]
+gradient = SubResource("Gradient_uqeha")
+width = 4
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.3)
+fill_to = Vector2(0.5, 1.05)
+
+[sub_resource type="Gradient" id="Gradient_3ovsr"]
+offsets = PackedFloat32Array(0, 0.15, 0.8, 1)
+colors = PackedColorArray(1, 0.85, 0.6, 0, 1, 0.85, 0.6, 0, 1, 0.85, 0.6, 0.35, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_5seab"]
+gradient = SubResource("Gradient_3ovsr")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_4xg86"]
+emission_shape = 3
+emission_box_extents = Vector3(540, 1170, 1)
+direction = Vector3(0, -1, 0)
+spread = 20.0
+initial_velocity_min = 6.0
+initial_velocity_max = 18.0
+gravity = Vector3(0, -4, 0)
+scale_min = 0.3
+scale_max = 0.9
+color_ramp = SubResource("GradientTexture1D_5seab")
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_thkx5"]
+
+[node name="MainMenu" type="Control"]
+script = ExtResource("3_menu")
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+layout_direction = 3
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_wem23")
+expand_mode = 1
+
+[node name="AmbientParticles" type="GPUParticles2D" parent="."]
+position = Vector2(540, 1170)
+amount = 26
+texture = ExtResource("1_0ebjn")
+lifetime = 9.0
+preprocess = 9.0
+process_material = SubResource("ParticleProcessMaterial_4xg86")
+
+[node name="HomeScreen" type="Control" parent="."]
+unique_name_in_owner = true
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="@CenterContainer@2" type="CenterContainer" parent="HomeScreen"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="@VBoxContainer@3" type="VBoxContainer" parent="HomeScreen/@CenterContainer@2"]
+layout_mode = 2
+theme_override_constants/separation = 56
+alignment = 1
+
+[node name="@VBoxContainer@4" type="VBoxContainer" parent="HomeScreen/@CenterContainer@2/@VBoxContainer@3"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="@Label@5" type="Label" parent="HomeScreen/@CenterContainer@2/@VBoxContainer@3/@VBoxContainer@4"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "فانوس"
+horizontal_alignment = 1
+
+[node name="@Label@6" type="Label" parent="HomeScreen/@CenterContainer@2/@VBoxContainer@3/@VBoxContainer@4"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "عالمٌ يكبر معك"
+horizontal_alignment = 1
+
+[node name="@VBoxContainer@7" type="VBoxContainer" parent="HomeScreen/@CenterContainer@2/@VBoxContainer@3"]
+custom_minimum_size = Vector2(460, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="PlayButton" type="Button" parent="HomeScreen/@CenterContainer@2/@VBoxContainer@3/@VBoxContainer@7"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "لعب  —  قريبًا"
+script = ExtResource("2_ob46e")
+
+[node name="SettingsButton" type="Button" parent="HomeScreen/@CenterContainer@2/@VBoxContainer@3/@VBoxContainer@7"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "الإعدادات"
+script = ExtResource("2_ob46e")
+
+[node name="AboutButton" type="Button" parent="HomeScreen/@CenterContainer@2/@VBoxContainer@3/@VBoxContainer@7"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "عن اللعبة"
+script = ExtResource("2_ob46e")
+
+[node name="SettingsScreen" type="Control" parent="."]
+unique_name_in_owner = true
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="@CenterContainer@8" type="CenterContainer" parent="SettingsScreen"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="@PanelContainer@9" type="PanelContainer" parent="SettingsScreen/@CenterContainer@8"]
+custom_minimum_size = Vector2(620, 0)
+layout_mode = 2
+
+[node name="@VBoxContainer@10" type="VBoxContainer" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9"]
+layout_mode = 2
+theme_override_constants/separation = 26
+
+[node name="@Label@11" type="Label" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10"]
+layout_mode = 2
+theme_type_variation = &"ScreenTitleLabel"
+text = "الإعدادات"
+horizontal_alignment = 2
+
+[node name="@Label@12" type="Label" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "الصوت"
+horizontal_alignment = 2
+
+[node name="@HBoxContainer@14" type="HBoxContainer" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="@Label@13" type="Label" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10/@HBoxContainer@14"]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+text = "الصوت الرئيسي"
+horizontal_alignment = 2
+
+[node name="MasterSlider" type="HSlider" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10/@HBoxContainer@14"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+
+[node name="MasterValueLabel" type="Label" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10/@HBoxContainer@14"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "100%"
+
+[node name="@HBoxContainer@16" type="HBoxContainer" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="@Label@15" type="Label" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10/@HBoxContainer@16"]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+text = "الموسيقى"
+horizontal_alignment = 2
+
+[node name="MusicSlider" type="HSlider" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10/@HBoxContainer@16"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+
+[node name="MusicValueLabel" type="Label" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10/@HBoxContainer@16"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "100%"
+
+[node name="@HBoxContainer@18" type="HBoxContainer" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="@Label@17" type="Label" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10/@HBoxContainer@18"]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+text = "المؤثرات الصوتية"
+horizontal_alignment = 2
+
+[node name="SFXSlider" type="HSlider" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10/@HBoxContainer@18"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+
+[node name="SFXValueLabel" type="Label" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10/@HBoxContainer@18"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "100%"
+
+[node name="@HBoxContainer@20" type="HBoxContainer" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="@Label@19" type="Label" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10/@HBoxContainer@20"]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+text = "أصوات الواجهة"
+horizontal_alignment = 2
+
+[node name="UISlider" type="HSlider" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10/@HBoxContainer@20"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+
+[node name="UIValueLabel" type="Label" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10/@HBoxContainer@20"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "100%"
+
+[node name="@HSeparator@21" type="HSeparator" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10"]
+layout_mode = 2
+
+[node name="@Label@22" type="Label" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "جودة العرض"
+horizontal_alignment = 2
+
+[node name="@HBoxContainer@23" type="HBoxContainer" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="QualityHighButton" type="Button" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10/@HBoxContainer@23"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SecondaryButton"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_thkx5")
+text = "عالية"
+script = ExtResource("2_ob46e")
+
+[node name="QualityBalancedButton" type="Button" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10/@HBoxContainer@23"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SecondaryButton"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_thkx5")
+text = "متوازنة"
+script = ExtResource("2_ob46e")
+
+[node name="SettingsBackButton" type="Button" parent="SettingsScreen/@CenterContainer@8/@PanelContainer@9/@VBoxContainer@10"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SecondaryButton"
+text = "رجوع"
+script = ExtResource("2_ob46e")
+
+[node name="AboutScreen" type="Control" parent="."]
+unique_name_in_owner = true
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="@CenterContainer@24" type="CenterContainer" parent="AboutScreen"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="@PanelContainer@25" type="PanelContainer" parent="AboutScreen/@CenterContainer@24"]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 2
+
+[node name="@VBoxContainer@26" type="VBoxContainer" parent="AboutScreen/@CenterContainer@24/@PanelContainer@25"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="@Label@27" type="Label" parent="AboutScreen/@CenterContainer@24/@PanelContainer@25/@VBoxContainer@26"]
+layout_mode = 2
+theme_type_variation = &"ScreenTitleLabel"
+text = "عن اللعبة"
+horizontal_alignment = 1
+
+[node name="@Label@28" type="Label" parent="AboutScreen/@CenterContainer@24/@PanelContainer@25/@VBoxContainer@26"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+text = "فانوس"
+horizontal_alignment = 1
+
+[node name="@Label@29" type="Label" parent="AboutScreen/@CenterContainer@24/@PanelContainer@25/@VBoxContainer@26"]
+custom_minimum_size = Vector2(440, 0)
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "عالمٌ حيّ ينبض داخل فانوس سحري — ينمو معك، ويتغيّر باستمرار، ولا ينتهي أبدًا."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="VersionLabel" type="Label" parent="AboutScreen/@CenterContainer@24/@PanelContainer@25/@VBoxContainer@26"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "الإصدار 0.1.0"
+horizontal_alignment = 1
+
+[node name="@Label@30" type="Label" parent="AboutScreen/@CenterContainer@24/@PanelContainer@25/@VBoxContainer@26"]
+layout_mode = 2
+theme_type_variation = &"MutedLabel"
+text = "مبني باستخدام محرك Godot المفتوح المصدر"
+horizontal_alignment = 1
+
+[node name="@Control@31" type="Control" parent="AboutScreen/@CenterContainer@24/@PanelContainer@25/@VBoxContainer@26"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+
+[node name="AboutBackButton" type="Button" parent="AboutScreen/@CenterContainer@24/@PanelContainer@25/@VBoxContainer@26"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SecondaryButton"
+text = "رجوع"
+script = ExtResource("2_ob46e")
