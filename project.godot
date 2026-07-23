@@ -25,6 +25,16 @@ SaveManager="*res://scripts/autoload/save_manager.gd"
 SettingsManager="*res://scripts/autoload/settings_manager.gd"
 AudioManager="*res://scripts/autoload/audio_manager.gd"
 
+[gui]
+
+; ثيم واحد مركزي يُطبَّق تلقائيًا على كل عنصر واجهة في كل مشهد — بدل
+; إسناد ثيم يدويًا لكل مشهد على حدة. راجع docs/ARCHITECTURE.md.
+theme/custom="res://theme/fanous_theme.tres"
+
+[internationalization]
+
+locale/fallback="ar"
+
 [display]
 
 window/size/viewport_width=1080
