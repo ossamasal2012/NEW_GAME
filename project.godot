@@ -11,6 +11,10 @@ config/description="عالم حيّ ينبض داخل فانوس سحري — ي
 run/main_scene="res://scenes/boot/boot.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
+; بلا هذا، يُغلق Godot التطبيق تلقائيًا عند ضغط زر الرجوع في أندرويد بصرف
+; النظر عن أي كود. تعطيله يجعل GameManager وEventBus (راجع
+; docs/ARCHITECTURE.md) المسؤولين الوحيدين عن معنى "رجوع" في كل شاشة.
+config/quit_on_go_back=false
 
 [audio]
 
