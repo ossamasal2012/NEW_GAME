@@ -10,6 +10,7 @@ extends Control
 ## وعالم اللعب نفسه).
 
 const SCREEN_TRANSITION_DURATION := 0.3
+const WORLD_SCENE := "res://scenes/world/lantern_world.tscn"
 
 @onready var home_screen: Control = %HomeScreen
 @onready var settings_screen: Control = %SettingsScreen
@@ -41,10 +42,10 @@ var _current_screen: Control
 func _ready() -> void:
 	GameManager.current_state = GameManager.State.MAIN_MENU
 
-	# لا يوجد بعد عالم لعب فعلي (يُبنى في المرحلة 3 وما بعدها) — الزر
-	# موجود وواضح بدل أن يُخفى، لكنه معطَّل صراحة بدل أن يقود لمكان فارغ.
-	# راجع خارطة الطريق في docs/GAME_DESIGN.md.
-	play_button.disabled = true
+	# عالم الفانوس الحي أصبح موجودًا فعليًا (المرحلة 3) — الزر لم يعد
+	# معطَّلًا كما كان في المرحلة 2؛ يقود الآن لمشهد حقيقي، لا مكان فارغ.
+	play_button.pressed.connect(func() -> void:
+		SceneManager.change_scene(WORLD_SCENE))
 
 	settings_button.pressed.connect(_switch_to.bind(settings_screen))
 	about_button.pressed.connect(_switch_to.bind(about_screen))
@@ -63,6 +64,8 @@ func _ready() -> void:
 	_refresh_quality_buttons()
 
 	version_label.text = "الإصدار %s" % SaveManager.APP_VERSION
+
+	EventBus.back_button_requested.connect(_on_back_requested)
 
 	home_screen.show()
 	home_screen.modulate.a = 1.0
@@ -115,3 +118,13 @@ func _switch_to(target: Control) -> void:
 	if outgoing:
 		tween.tween_property(outgoing, "modulate:a", 0.0, SCREEN_TRANSITION_DURATION * 0.7)
 		tween.chain().tween_callback(outgoing.hide)
+
+
+## سلوك "رجوع" القياسي في أندرويد: من شاشة فرعية (إعدادات/عن اللعبة) يعود
+## للشاشة الرئيسية، ومن الشاشة الرئيسية نفسها — حيث لا يوجد ما يُرجَع
+## إليه — يُغلق التطبيق، تمامًا كما يتوقع أي مستخدم أندرويد.
+func _on_back_requested() -> void:
+	if _current_screen == home_screen:
+		get_tree().quit()
+	else:
+		_switch_to(home_screen)
