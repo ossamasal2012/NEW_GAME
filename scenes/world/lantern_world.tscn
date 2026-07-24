@@ -1,0 +1,284 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/world/orbit_camera_controller.gd" id="1_i8x5y"]
+[ext_resource type="Script" path="res://scripts/world/procedural_island.gd" id="2_ny6bo"]
+[ext_resource type="Shader" path="res://assets/shaders/water.gdshader" id="3_t88lu"]
+[ext_resource type="Texture2D" path="res://assets/textures/soft_particle.png" id="4_cffwy"]
+[ext_resource type="Script" path="res://scenes/world/lantern_world.gd" id="5_world"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_s0xyg"]
+sky_top_color = Color(0.1, 0.08, 0.24, 1)
+sky_horizon_color = Color(0.58, 0.32, 0.38, 1)
+sky_curve = 0.22
+ground_bottom_color = Color(0.045, 0.035, 0.09, 1)
+ground_horizon_color = Color(0.32, 0.19, 0.2, 1)
+ground_curve = 0.18
+sun_angle_max = 24.0
+sun_curve = 0.18
+
+[sub_resource type="Sky" id="Sky_kpw3l"]
+sky_material = SubResource("ProceduralSkyMaterial_s0xyg")
+
+[sub_resource type="Environment" id="Environment_oxtxf"]
+background_mode = 2
+sky = SubResource("Sky_kpw3l")
+ambient_light_source = 3
+ambient_light_energy = 0.9
+reflected_light_source = 2
+tonemap_mode = 3
+tonemap_exposure = 1.1
+tonemap_white = 6.0
+ssr_enabled = true
+ssr_max_steps = 56
+ssr_fade_out = 2.5
+ssr_depth_tolerance = 0.2
+ssao_enabled = true
+ssao_radius = 1.4
+ssao_intensity = 1.8
+ssao_power = 1.4
+ssil_enabled = true
+ssil_radius = 3.5
+ssil_intensity = 1.1
+glow_enabled = true
+glow_levels/2 = 1.0
+glow_levels/3 = 1.0
+glow_levels/4 = 1.0
+glow_intensity = 0.9
+glow_bloom = 0.22
+glow_blend_mode = 2
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.018
+volumetric_fog_albedo = Color(0.62, 0.55, 0.85, 1)
+volumetric_fog_emission = Color(0.95, 0.65, 0.35, 1)
+volumetric_fog_emission_energy = 0.5
+volumetric_fog_gi_inject = 0.9
+volumetric_fog_length = 24.0
+volumetric_fog_ambient_inject = 0.25
+adjustment_enabled = true
+adjustment_brightness = 1.02
+adjustment_contrast = 1.06
+adjustment_saturation = 1.1
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_gdslo"]
+auto_exposure_enabled = true
+auto_exposure_scale = 0.5
+auto_exposure_speed = 0.6
+auto_exposure_min_sensitivity = 50.0
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_gfmo5"]
+auto_exposure_enabled = true
+auto_exposure_min_sensitivity = 50.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dp5kw"]
+render_priority = 0
+shader = ExtResource("3_t88lu")
+shader_parameter/water_color = null
+shader_parameter/water_deep_color = null
+shader_parameter/roughness_value = null
+shader_parameter/wave_speed = null
+shader_parameter/wave_height = null
+shader_parameter/wave_frequency = null
+shader_parameter/normal_strength = null
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_oknon"]
+size = Vector2(11.5, 11.5)
+subdivide_width = 24
+subdivide_depth = 24
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fywbs"]
+transparency = 1
+cull_mode = 2
+albedo_color = Color(0.78, 0.87, 1, 0.1)
+roughness = 0.02
+rim_enabled = true
+rim = 0.65
+rim_tint = 0.4
+refraction_enabled = true
+refraction_scale = 0.07
+
+[sub_resource type="SphereMesh" id="SphereMesh_xyyn3"]
+radius = 6.9
+height = 13.8
+radial_segments = 40
+rings = 24
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mk87q"]
+albedo_color = Color(0.85, 0.62, 0.32, 1)
+metallic = 0.9
+roughness = 0.28
+
+[sub_resource type="TorusMesh" id="TorusMesh_m3td8"]
+inner_radius = 6.75
+outer_radius = 6.95
+
+[sub_resource type="TorusMesh" id="TorusMesh_jsqtv"]
+inner_radius = 0.35
+outer_radius = 0.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_o5yxo"]
+top_radius = 0.55
+bottom_radius = 0.9
+height = 0.6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n7i3e"]
+transparency = 1
+albedo_color = Color(1, 0.72, 0.38, 0.85)
+roughness = 0.1
+emission_enabled = true
+emission = Color(1, 0.72, 0.38, 1)
+emission_energy_multiplier = 3.5
+
+[sub_resource type="PrismMesh" id="PrismMesh_fv8eq"]
+size = Vector3(0.28, 0.5, 0.28)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2esoi"]
+transparency = 1
+albedo_color = Color(0.55, 0.85, 1, 0.85)
+roughness = 0.1
+emission_enabled = true
+emission = Color(0.55, 0.85, 1, 1)
+emission_energy_multiplier = 3.5
+
+[sub_resource type="PrismMesh" id="PrismMesh_e4ghe"]
+size = Vector3(0.28, 0.5, 0.28)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ihxn0"]
+transparency = 1
+albedo_color = Color(0.85, 0.55, 1, 0.85)
+roughness = 0.1
+emission_enabled = true
+emission = Color(0.85, 0.55, 1, 1)
+emission_energy_multiplier = 3.5
+
+[sub_resource type="PrismMesh" id="PrismMesh_agyqu"]
+size = Vector3(0.28, 0.5, 0.28)
+
+[sub_resource type="Gradient" id="Gradient_qbuqj"]
+offsets = PackedFloat32Array(0, 0.2, 0.8, 1)
+colors = PackedColorArray(1, 0.85, 0.55, 0, 1, 0.85, 0.55, 0, 1, 0.85, 0.55, 0.5, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_3lieb"]
+gradient = SubResource("Gradient_qbuqj")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1s3ya"]
+emission_shape = 1
+emission_sphere_radius = 3.6
+direction = Vector3(0, 1, 0)
+spread = 180.0
+initial_velocity_min = 0.05
+initial_velocity_max = 0.18
+gravity = Vector3(0, 0.06, 0)
+scale_min = 0.6
+scale_max = 1.6
+color_ramp = SubResource("GradientTexture1D_3lieb")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2mlat"]
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("4_cffwy")
+billboard_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_7ycaf"]
+material = SubResource("StandardMaterial3D_2mlat")
+size = Vector2(0.06, 0.06)
+
+[node name="LanternWorld" type="Node3D"]
+script = ExtResource("5_world")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_oxtxf")
+camera_attributes = SubResource("CameraAttributesPractical_gdslo")
+
+[node name="MoonLight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.81915206, 0.45198438, -0.35312894, 0, 0.6156615, 0.7880107, 0.57357645, -0.6455006, 0.5043204, 0, 0, 0)
+light_color = Color(0.78, 0.82, 1, 1)
+light_energy = 1.35
+shadow_enabled = true
+directional_shadow_max_distance = 30.0
+
+[node name="CameraRig" type="Node3D" parent="."]
+script = ExtResource("1_i8x5y")
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
+attributes = SubResource("CameraAttributesPractical_gfmo5")
+current = true
+fov = 42.0
+
+[node name="Island" type="MeshInstance3D" parent="."]
+script = ExtResource("2_ny6bo")
+
+[node name="Water" type="MeshInstance3D" parent="."]
+material_override = SubResource("ShaderMaterial_dp5kw")
+mesh = SubResource("PlaneMesh_oknon")
+
+[node name="LanternShell" type="Node3D" parent="."]
+
+[node name="GlassDome" type="MeshInstance3D" parent="LanternShell"]
+material_override = SubResource("StandardMaterial3D_fywbs")
+mesh = SubResource("SphereMesh_xyyn3")
+
+[node name="EquatorRing" type="MeshInstance3D" parent="LanternShell"]
+material_override = SubResource("StandardMaterial3D_mk87q")
+mesh = SubResource("TorusMesh_m3td8")
+
+[node name="TopRing" type="MeshInstance3D" parent="LanternShell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.3, 0)
+material_override = SubResource("StandardMaterial3D_mk87q")
+mesh = SubResource("TorusMesh_jsqtv")
+
+[node name="TopCap" type="MeshInstance3D" parent="LanternShell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.95, 0)
+material_override = SubResource("StandardMaterial3D_mk87q")
+mesh = SubResource("CylinderMesh_o5yxo")
+
+[node name="CrystalAccents" type="Node3D" parent="."]
+
+[node name="Crystal1" type="Node3D" parent="CrystalAccents"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9, 1, -1.1)
+
+[node name="Gem" type="MeshInstance3D" parent="CrystalAccents/Crystal1"]
+transform = Transform3D(0.82745373, 0, -0.5615339, 0, 1, 0, 0.5615339, 0, 0.82745373, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_n7i3e")
+mesh = SubResource("PrismMesh_fv8eq")
+
+[node name="Glow" type="OmniLight3D" parent="CrystalAccents/Crystal1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+light_color = Color(1, 0.72, 0.38, 1)
+light_energy = 1.6
+omni_range = 2.2
+
+[node name="Crystal2" type="Node3D" parent="CrystalAccents"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 0.85, 1.75)
+
+[node name="Gem" type="MeshInstance3D" parent="CrystalAccents/Crystal2"]
+transform = Transform3D(0.66687804, 0, 0.74516684, 0, 1, 0, -0.74516684, 0, 0.66687804, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_2esoi")
+mesh = SubResource("PrismMesh_e4ghe")
+
+[node name="Glow" type="OmniLight3D" parent="CrystalAccents/Crystal2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+light_color = Color(0.55, 0.85, 1, 1)
+light_energy = 1.6
+omni_range = 2.2
+
+[node name="Crystal3" type="Node3D" parent="CrystalAccents"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 1.15, 2.3)
+
+[node name="Gem" type="MeshInstance3D" parent="CrystalAccents/Crystal3"]
+transform = Transform3D(-0.7663158, 0, -0.64246404, 0, 1, 0, 0.64246404, 0, -0.7663158, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_ihxn0")
+mesh = SubResource("PrismMesh_agyqu")
+
+[node name="Glow" type="OmniLight3D" parent="CrystalAccents/Crystal3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+light_color = Color(0.85, 0.55, 1, 1)
+light_energy = 1.6
+omni_range = 2.2
+
+[node name="AmbientMotes" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+amount = 34
+lifetime = 10.0
+preprocess = 10.0
+process_material = SubResource("ParticleProcessMaterial_1s3ya")
+draw_pass_1 = SubResource("QuadMesh_7ycaf")
