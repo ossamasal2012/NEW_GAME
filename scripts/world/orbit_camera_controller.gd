@@ -14,16 +14,24 @@ extends Node3D
 @export var pivot_target: Vector3 = Vector3.ZERO
 @export var min_distance: float = 8.0
 @export var max_distance: float = 16.0
-@export var min_pitch_degrees: float = -55.0
-@export var max_pitch_degrees: float = 20.0
+## أدنى زاوية ارتفاع — أقرب ما يكون من مستوى أفقي مع الجزيرة، بلا نزول
+## تحتها أبدًا (لا معنى لرؤية العالم من تحته). أقصى زاوية قريبة من الرأسي
+## تمامًا (لكن ليست 90 درجة تجنّبًا لالتباس look_at عند التعامد الكامل).
+@export var min_pitch_degrees: float = 10.0
+@export var max_pitch_degrees: float = 78.0
 @export var rotate_sensitivity: float = 0.32
 @export var zoom_sensitivity: float = 0.024
 @export var follow_damping: float = 9.0
 @export var initial_distance: float = 11.5
-@export var initial_pitch_degrees: float = -18.0
+@export var initial_pitch_degrees: float = 38.0
 @export var initial_yaw_degrees: float = 35.0
 
 @onready var camera: Camera3D = $Camera3D
+
+## يضبطه TouchTerrainSculptor أثناء نحت فعلي للتضاريس، فيتوقف المدار عن
+## معالجة أي لمسة فورًا حتى رفع الإصبع — كلا النظامين يستمعان لنفس تدفّق
+## اللمس، وهذا العلم المشترك البسيط يمنعهما من التنافس على نفس الحدث.
+var sculpting_active: bool = false
 
 var _yaw_degrees: float
 var _pitch_degrees: float
@@ -48,6 +56,8 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if sculpting_active:
+		return
 	if event is InputEventScreenTouch:
 		if event.pressed:
 			_active_touches[event.index] = event.position
