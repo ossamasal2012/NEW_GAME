@@ -49,3 +49,10 @@ signal back_button_requested()
 signal settings_changed(setting_key: String, new_value: Variant)
 
 signal audio_bus_volume_changed(bus_name: String, linear_volume: float)
+
+# -- عالم اللعب ---------------------------------------------------------
+
+## يصدر عند أي تعديل فعلي على حالة عالم الفانوس يستحق الحفظ (اكتمال لفتة
+## نحت تضاريس، ولاحقًا: زرع، تطوّر مخلوق...). المستمع (مشهد العالم نفسه)
+## هو من يقرر متى وكيف يُنفَّذ الحفظ الفعلي عبر SaveManager.
+signal world_state_changed()
